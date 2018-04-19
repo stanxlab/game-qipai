@@ -123,7 +123,25 @@ describe('测试 带癞子的胡牌算法', function () {
             let rs = checkHu.isHuLaizi(shouPai, laiziCount);
             rs.should.be.true();
         });
+    });
 
+    describe('有癞子时的,不需要将牌时验证, TODO: ', function () {
+        it('#checkHu::isHuLaizi() 1个癞子不能胡 #1 ', function () {
+            let shouPai = [14, 15, 16, 17, 17, 33, 34, 45, 45];
+            let laiziCount = 1;
+            let isNeedJiang = false;
+            let rs = checkHu.isHuLaizi(shouPai, laiziCount, isNeedJiang);
+            rs.should.be.false();
+        });
+
+        it.only('#checkHu::isHuLaizi() 1个癞子不能胡(字牌不能当顺子) #22 ', function () {
+            let shouPai = [14, 15, 16, 17, 17, 17, 45, 46];
+            let laiziCount = 1;
+            let isNeedJiang = false;
+            let rs = checkHu.isHuLaizi(shouPai, laiziCount, isNeedJiang);
+            console.log('--------', rs);
+            rs.should.be.false();
+        });
     });
 
 });

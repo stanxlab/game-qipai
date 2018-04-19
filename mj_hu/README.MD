@@ -4,7 +4,8 @@
 - `checkHu` 麻将胡牌算法目录
     - `base.js` 通用胡牌算法
     - `laiziHu.js` 癞子胡牌算法(依赖base.js)
-- `checkHu.test.js` 测试用户所在文件
+- `test` 测试用例目录
+    - `checkHu.test.js` 胡牌代码测试用例
 - `node_modules` 安装的模块,  mocha should istanbul
 
 ### 安装模块

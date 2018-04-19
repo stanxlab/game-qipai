@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha test/*",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/*"
+    "coverage": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/*",
+    "coverage:check": "./node_modules/istanbul/lib/cli.js  check-coverage --statement 90 --branch 90 --function 100 ./node_modules/mocha/bin/_mocha test/*"
   },
   "keywords": [],
   "author": "",

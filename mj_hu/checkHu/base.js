@@ -149,7 +149,7 @@ function isCommonHuByFormatedData(formatData) {
 
 // 寻找第一张牌,跳过为0的数字
 function getFirstCardIndex(cards) {
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < cards.length; j++) {
         if (cards[j] > 0) {
             return j;
         }

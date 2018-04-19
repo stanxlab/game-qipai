@@ -12,16 +12,16 @@ module.exports = {
  * @param {*} hand 手牌
  * @param {*} laiziCount 癞子数量 
  */
-function isHuLaizi(hand = [], laiziCount = 0) {
-    if ((hand.length + laiziCount) % 3 !== 2) {
-        console.log('牌数量不对', hand.length, laiziCount);
-        // 若牌张数不是2、5、8、11、14则不能胡
-        return false;
-    }
+function isHuLaizi(hand = [], laiziCount = 0, isNeedJiang = true) {
+    // if ((hand.length + laiziCount) % 3 !== 2) {
+    //     console.log('牌数量不对', hand.length, laiziCount);
+    //     // 若牌张数不是2、5、8、11、14则不能胡
+    //     return false;
+    // }
     let formatData = base.getFormatCardsData(hand);
     // console.log('formatData: ', formatData);
 
-    return isLaiziHuByFormatedData(formatData, laiziCount);
+    return isLaiziHuByFormatedData(formatData, laiziCount, isNeedJiang);
 }
 
 
@@ -82,20 +82,43 @@ function isLaiziHuNoPair(hand = [], laiziCount = 0) {
     return _isLaiziHuNoPairFormatData(formatData, laiziCount);
 }
 
-// 不带将牌时是否都能成扑
+/**
+ * 不带将牌时是否都能成扑
+ * - 此时需要将4组牌合并到一起判断,否则会重复多次使用到癞子数量
+ * @param {*} formatData 
+ * @param {*} laiziCount 
+ */
 function _isLaiziHuNoPairFormatData(formatData, laiziCount) {
-    for (let i = 0; i < 4; i++) {
-        let newLaiziCount = laiziCount;
-        // 所有花色都需要组合成牌, 有一种不能组合,则不能胡
-        let result = isPuLaizi(formatData[i], newLaiziCount);
-        // console.log(result, formatData[i]);
+    // for (let i = 0; i < 4; i++) {
+    //     let newLaiziCount = laiziCount;
+    //     // 所有花色都需要组合成牌, 有一种不能组合,则不能胡
+    //     let result = isPuLaizi(formatData[i], newLaiziCount);
+    //     // console.log(result, formatData[i]);
 
-        if (!result) {
-            return false;
-        }
+    //     if (!result) {
+    //         return false;
+    //     }
+    // }
+    // return true;
+
+    let tmpCardObj = {
+        canLine: true, // 默认可以为数组
+        total: 0,
+        list: [],
+    };
+
+    for (let item of formatData) {
+        tmpCardObj.total += item.total;
+        // 中间插入3个空置,避免出现 19,20,21 这种不存在的顺子
+        tmpCardObj.list = tmpCardObj.list
+            .concat([0, 0, 0])
+            .concat(item.list);
     }
+    tmpCardObj.canLineMinIdx = tmpCardObj.list.length - 10; // 最后9个字牌不能当顺子
 
-    return true;
+    let isHu = isPuLaizi(tmpCardObj, laiziCount);
+    // console.log('=========', isHu, JSON.stringify(tmpCardObj));
+    return isHu;
 }
 
 // 分析三张和顺子, 是否成扑, 含癞子
@@ -117,9 +140,10 @@ function isPuLaizi(cardsObj, laiziCount = 0) {
         shunziDecrIdxs.push(cardIdx + 2);
     }
 
-    //作为顺牌
-    if (cardsObj.canLine && cardIdx < 8 &&
-        (shunziCount === 3 || (shunziCount + laiziCount) >= 3)
+    //作为顺牌, 字牌不能做顺子
+    if (cardsObj.canLine &&
+        (shunziCount === 3 || (shunziCount + laiziCount) >= 3) &&
+        (!cardsObj.canLineMinIdx || cardIdx < cardsObj.canLineMinIdx) // 此时表示字牌
     ) {
         let newLaiziCount = laiziCount;
         //除去这3张顺牌
