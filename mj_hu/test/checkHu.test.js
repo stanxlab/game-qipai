@@ -74,7 +74,7 @@ describe('测试 带癞子的胡牌算法', function () {
 
     describe('不需要将牌,有癞子时的验证', function () {
         it('#checkHu::isLaiziHuNoPair() 2个癞子可以胡胡 #1 ', function () {
-            let shouPai = [11, 11, 14, 15, 24, 24];
+            let shouPai = [11, 11, 14, 15, 24, 24, 24];
             let laiziCount = 2;
             let rs = checkHu.isLaiziHuNoPair(shouPai, laiziCount);
             rs.should.be.true();
@@ -134,7 +134,7 @@ describe('测试 带癞子的胡牌算法', function () {
             rs.should.be.false();
         });
 
-        it.only('#checkHu::isHuLaizi() 1个癞子不能胡(字牌不能当顺子) #22 ', function () {
+        it('#checkHu::isHuLaizi() 1个癞子不能胡(字牌不能当顺子) #22 ', function () {
             let shouPai = [14, 15, 16, 17, 17, 17, 45, 46];
             let laiziCount = 1;
             let isNeedJiang = false;
